@@ -2,6 +2,7 @@
 using JsonValidationProject.Enums;
 using JsonValidationProject.Model;
 using JsonValidationProject.Model.Cards;
+using JsonValidationProject.Model.DTOs;
 using JsonValidationProject.Model.Ranges;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
@@ -156,7 +157,7 @@ namespace JsonValidationProject
         }
 
 
-        private Tuple<IList<string>, IList<string>> PANValidation(string jobFileName)
+        public Tuple<IList<string>, IList<string>> PANValidation(string jobFileName)
         {
             String content = System.IO.File.ReadAllText($"{mainPath}\\Source\\{jobFileName}.json");
             IList<string> errors = new List<string>();
@@ -193,7 +194,7 @@ namespace JsonValidationProject
         }
 
 
-        private IList<string> IsExpired(string jobFileName)
+        public IList<string> IsExpired(string jobFileName)
         {
             String content = System.IO.File.ReadAllText($"{mainPath}\\Source\\{jobFileName}.json");
             IList<string> errors = new List<string>();
@@ -240,7 +241,7 @@ namespace JsonValidationProject
         }
 
 
-        private IList<string> AuthMethod(string jobFileName)
+        public IList<string> AuthMethod(string jobFileName)
         {
             String content = System.IO.File.ReadAllText($"{mainPath}\\Source\\{jobFileName}.json");
             IList<string> informations = new List<string>();
@@ -325,192 +326,6 @@ namespace JsonValidationProject
             JSchema schema = JSchema.Parse(System.IO.File.ReadAllText($"{mainPath}\\Schemas\\JsonSchemaRanges.json"));
             jsonObject.IsValid(schema, out validationEvents);
             return validationEvents;
-        }
-
-
-        public Tuple<IList<string>,IList<string>> JsonRangeAndCardsValidationWithLogginToFile(string jsonCardsfileName, string jsonRagesfileName, string fileLogName)
-        {   
-            using StreamWriter log = new($"{mainPath}\\Logs\\{fileLogName}.txt");
-            IList<string> validationEvents = new List<string>();
-            IList<string> validationInformations = new List<string>();
-            log.WriteLine("Start validation/verfication process");
-            log.WriteLine("1). Remove new line character from track2 value if exists");
-            var jsonTrack2Enter = JsonTrack2EnterCut(jsonCardsfileName);
-            if (jsonTrack2Enter.Count > 0)
-            {
-                log.WriteLine("1). Validation failed");
-                log.WriteLine("Following errors occured:");
-                foreach (var validationEvent in jsonTrack2Enter)
-                {
-                    log.WriteLine(validationEvent);
-                    validationEvents.Add(validationEvent);
-                }
-                return Tuple.Create(validationEvents, validationInformations);
-            }
-
-            log.WriteLine("1). Proper removal of all new line character from track2 value");
-            log.WriteLine("2). JsonCards content validation started");
-            var jsonCardValidation = JsonContentValidationCards(jsonCardsfileName);
-            if (jsonCardValidation.Count > 0)
-            {
-                log.WriteLine("2). JsonCards content validation failed");
-                log.WriteLine("Following errors occured:");
-                foreach (var validationEvent in jsonCardValidation)
-                {
-                    log.WriteLine(validationEvent);
-                    validationEvents.Add(validationEvent);
-                }
-                return Tuple.Create(validationEvents, validationInformations);
-            }
-
-            log.WriteLine("2). JsonCards content validation sucessfull");
-            log.WriteLine("3). JsonRanges content validation started");
-            var jsonRangesValidation = JsonContentValidationRanges(jsonRagesfileName);
-            if (jsonRangesValidation.Count > 0)
-            {
-                log.WriteLine("3). JsonRanges content validation failed");
-                log.WriteLine("Following errors occured:");
-                foreach (var validationEvent in jsonRangesValidation)
-                {
-                    log.WriteLine(validationEvent);
-                    validationEvents.Add(validationEvent);
-                }
-                return Tuple.Create(validationEvents, validationInformations);
-            }
-
-            log.WriteLine("3). JsonRanges content validation sucessfull");
-            log.WriteLine("4). Ranges interval validation started");
-
-            var rangesInput = new List<RangeOverlapValidatorInput>();
-            var ranges = new RootRanges();
-            try
-            {
-                var content = System.IO.File.ReadAllText($"{mainPath}\\Source\\{jsonRagesfileName}.json");
-                ranges = JsonSerializer.Deserialize<RootRanges>(content);
-
-            }
-            catch (Exception)
-            {
-                log.WriteLine("4). Ranges interval validation failed due to wrong file format");
-                validationEvents.Add($"Wrong file name or format: {jsonRagesfileName}");
-                return Tuple.Create(validationEvents, validationInformations);
-            }
-            if (ranges != null)
-            {
-                foreach (var range in ranges.ranges)
-                {
-                    long fromCast = 0;
-                    long toCast = 0;
-                    try
-                    {
-                        long.TryParse(range.from, out fromCast);
-                        long.TryParse(range.to, out toCast);
-
-                    }
-                    catch (Exception ex)
-                    {
-                        log.WriteLine("4). Ranges interval validation failed due to not correct casting string to long");
-                        validationEvents.Add($"During ranges values casting follwoing exception has been found: {ex} ");
-                        return Tuple.Create(validationEvents, validationInformations);
-
-                    }
-                    rangesInput.Add(new RangeOverlapValidatorInput
-                    {
-                        aStart = fromCast,
-                        aEnd = toCast
-                    });
-                }
-                var rangesValidation = ValidateRangesIntervalAndOverlap(rangesInput);
-                if (rangesValidation.Count > 0)
-                {
-                    log.WriteLine("4). Ranges interval validation failed");
-                    log.WriteLine("Following errors occured:");
-                    foreach (var validationEvent in rangesValidation)
-                    {
-                        log.WriteLine(validationEvent);
-                        validationEvents.Add(validationEvent);
-                    }
-                    return Tuple.Create(validationEvents, validationInformations);
-                }
-            }
-
-            log.WriteLine("4). Ranges interval validation successful");
-            log.WriteLine("5). PAN validation started");
-            var panValidation = PANValidation(jsonCardsfileName);
-            if (panValidation.Item1.Count > 0)
-            {
-                log.WriteLine("5). PAN validation failed");
-                log.WriteLine("Following errors occured:");
-                foreach (var validationEvent in panValidation.Item1)
-                {
-                    log.WriteLine(validationEvent);
-                    validationEvents.Add(validationEvent);
-                }
-                return Tuple.Create(validationEvents, validationInformations);
-            }
-            if (panValidation.Item2.Count > 0)
-            {
-                log.WriteLine("PAN:");
-                validationInformations.Add("PAN checked:");
-                foreach (var validationInformation in panValidation.Item2)
-                {
-                    log.WriteLine(validationInformation);
-                    validationInformations.Add(validationInformation);
-                }
-            }
-            log.WriteLine("5). PAN validation ended");
-            log.WriteLine("6). Expiry date verification started");
-            var expirationValidation = IsExpired(jsonCardsfileName);
-            if (expirationValidation.Count > 0)
-            {
-                log.WriteLine("Following card are expired:");
-                validationInformations.Add("Following card are expired:");
-                foreach (var validationInformation in expirationValidation)
-                {
-                    log.WriteLine(validationInformation);
-                    validationInformations.Add(validationInformation);
-                }
-            }
-            log.WriteLine("6). Expiry date verification ended");
-            log.WriteLine("7). Card authentication method verification started");
-            var authMethodCheck = AuthMethod(jsonCardsfileName);
-            if (authMethodCheck.Count > 0)
-            {
-                log.WriteLine("Card authentiaction method checked:");
-                validationInformations.Add("Card authentiaction method checked:");
-                foreach (var validationInformation in authMethodCheck)
-                {
-                    log.WriteLine(validationInformation);
-                    validationInformations.Add(validationInformation);
-                }
-            }
-            log.WriteLine("7). Card authentication method verification ended");
-            log.WriteLine("7). Card authentication method verification ended");
-            log.WriteLine("8). Card matching stated");
-
-            var cardMatching = new Matching().MatchCardToRange(jsonCardsfileName, jsonRagesfileName);
-            if (cardMatching.Item1.Count > 0)
-            {
-                log.WriteLine("8). Matching failed");
-                log.WriteLine("Following errors occured:");
-                foreach (var validationEvent in cardMatching.Item1)
-                {
-                    log.WriteLine(validationEvent);
-                    validationEvents.Add(validationEvent);
-                }
-                return Tuple.Create(validationEvents, validationInformations);
-            }
-            if (cardMatching.Item2.Count > 0)
-            {
-                validationInformations.Add("8). Matching done:");
-                foreach (var validationInformation in cardMatching.Item2)
-                {
-                    log.WriteLine(validationInformation);
-                    validationInformations.Add(validationInformation);
-                }
-            }
-            log.WriteLine("Ended validation/verfication process");
-            return Tuple.Create(validationEvents, validationInformations);
-        }
+        }       
     }
 }

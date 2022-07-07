@@ -1,4 +1,4 @@
 ﻿using JsonValidationProject;
-//new Execution().FirstJob();
-//new Execution().SecondJob();
-new Execution().ThirdJob();
+//new Execution().FirstJob("CardsOk");
+//new Execution().SecondJob("RangesOk");
+new Execution().ThirdJob("CardsOk","RangesOk","Log");

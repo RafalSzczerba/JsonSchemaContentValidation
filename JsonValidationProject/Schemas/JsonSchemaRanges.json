@@ -6,12 +6,13 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "ranges": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Range"
-                    }
+              "ranges": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/definitions/Range"
                 }
+              }
             },
             "required": [
                 "ranges"

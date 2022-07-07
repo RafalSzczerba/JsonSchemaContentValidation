@@ -13,8 +13,10 @@ namespace JsonValidationProject.Contracts
         IList<string> JsonContentValidationCards(string jobFileName);
         IList<string> Track2Validation(string jobFileName);
         IList<string> ZipCodeValidation(string jobFileName);
+        IList<string> IsExpired(string jobFileName);
+        IList<string> AuthMethod(string jobFileName);
+
+        Tuple<IList<string>, IList<string>> PANValidation(string jobFileName);
         IList<string> ValidateRangesIntervalAndOverlap(List<RangeOverlapValidatorInput> input);
-        IList<string> JsonContentValidationRanges(string jobFileName);
-        Tuple<IList<string>, IList<string>> JsonRangeAndCardsValidationWithLogginToFile(string jsonCardsfileName, string jsonRagesfileName, string fileLogName);
-    }
+        IList<string> JsonContentValidationRanges(string jobFileName);    }
 }
