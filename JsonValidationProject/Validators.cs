@@ -18,6 +18,7 @@ namespace JsonValidationProject
 {
     public class Validators : IValidators
     {
+
         private string mainPath { get; set; }
         public Validators()
         {

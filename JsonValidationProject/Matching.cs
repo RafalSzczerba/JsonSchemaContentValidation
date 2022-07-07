@@ -52,11 +52,23 @@ namespace JsonValidationProject
             regExp.Add(5, new Regex(@"^(670000[1-9]|67000[1-9][0-9]|6700[1-9][0-9]{2}|670[1-9][0-9]{3}|67[1-9][0-9]{4}|68[0-9]{5})$", RegexOptions.Compiled));
             if (rootCards != null && rootRanges != null && rootCards.Cards != null && rootRanges.ranges != null)
             {
+                
+                var regExpPANatLeast7 = new Regex(@"^\;[0-9]{9,19}\=", RegexOptions.Compiled);
+                var regExpPANatLeast2 = new Regex(@"^\;[0-9]{4,19}\=", RegexOptions.Compiled);
+
                 foreach (var card in rootCards.Cards)
-                {
-                    var cardNo67Case = card.Track2.Substring(1, 7);
-                    var cardNo4967Case = card.Track2.Substring(1, 7);
-                    string cardNo = card.Track2.Substring(1, 7);
+                {             
+                    
+                    var cardNo67Case = card.Track2.Substring(1, 2);
+                    var cardNo4967Case = card.Track2.Substring(1, 2);
+                    var cardNo = card.Track2.Substring(1, 2);
+                    if (regExpPANatLeast7.IsMatch(card.Track2))
+                    {
+                         cardNo67Case = card.Track2.Substring(1, 7);
+                         cardNo4967Case = card.Track2.Substring(1, 7);
+                         cardNo = card.Track2.Substring(1, 7);
+                    }                 
+                    
                     if (cardNo67Case.StartsWith("67"))
                     {
                         var otherNumberAfter67 = cardNo67Case.Substring(2, 5);
