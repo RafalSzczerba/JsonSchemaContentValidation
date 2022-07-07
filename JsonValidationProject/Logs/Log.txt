@@ -1,0 +1,11 @@
+1). Start removal of new line character from track2 value if exists
+1). End removal of new line character from track2 value
+2). JsonCards content validation started
+2). JsonCards content validation sucessfull
+3). JsonRanges content validation started
+3). JsonRanges content validation sucessfull
+4). Ranges interval validation started
+4). Ranges interval validation failed
+Following errors occured:
+Not proper interval: 48 - 48
+asdds
