@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JsonValidationProject.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JsonValidationProject
 {
-    public class Execution
+    public class Execution : IExecution
     {
         public void FirstJob()
         {
@@ -142,7 +143,7 @@ namespace JsonValidationProject
             string? secondFileName = Console.ReadLine();
             Console.WriteLine("Intruduce the name of the log file");
             string? logFileName = Console.ReadLine();
-
+            Console.Clear();
             if (firstFileName == null || firstFileName == ""
                 || secondFileName == null || secondFileName == ""
                 || logFileName == null || logFileName == ""
@@ -154,11 +155,20 @@ namespace JsonValidationProject
             }
             var obj = new Validators().JsonRangeAndCardsValidationWithLogginToFile(firstFileName, secondFileName, logFileName);
             Console.WriteLine("Starting Validation");
-            if (obj.Count > 0)
+            if (obj.Item1.Count > 0)
             {
+                if(obj.Item2.Count > 0)
+                {
+                    Console.WriteLine("Folowing information has been logged:");
+                    foreach (var validationEvent in obj.Item2)
+                    {
+                        Console.WriteLine(validationEvent);
+                    }
+                }                
+                Console.WriteLine();                
                 Console.WriteLine("Following errors has been found:");
                 Console.WriteLine();
-                foreach (var validationEvent in obj)
+                foreach (var validationEvent in obj.Item1)
                 {
                     Console.WriteLine(validationEvent);
                 }
@@ -167,7 +177,15 @@ namespace JsonValidationProject
             }
             else
             {
-                Console.WriteLine($"End of validation: successful. Check log file - {logFileName}.txt in main folder");
+                if (obj.Item2.Count > 0)
+                {
+                    Console.WriteLine("Folowing information has been logged:");
+                    foreach (var validationEvent in obj.Item2)
+                    {
+                        Console.WriteLine(validationEvent);
+                    }
+                }
+                Console.WriteLine($"End of validation: successful. Check log file under this path- Logs\\{logFileName}.txt");
                 Console.WriteLine();
             }
         }

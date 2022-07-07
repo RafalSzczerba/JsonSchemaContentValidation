@@ -7,15 +7,19 @@ using System.Threading.Tasks;
 
 namespace JsonValidationProject.Model.Ranges
 {
+
     public class Range
     {
-        [JsonProperty("from")]
-        public string From { get; set; }
+        public string? from { get; set; }
 
-        [JsonProperty("to")]
-        public string To { get; set; }
+        public string? to { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        public string? name { get; set; }
     }
+
+
+
+
+
+
 }

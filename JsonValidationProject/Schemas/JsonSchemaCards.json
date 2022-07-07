@@ -1,0 +1,102 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/Welcome",
+    "definitions": {
+        "Welcome": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Card"
+                    }
+                }
+            },
+            "required": [
+                "cards"
+            ],
+            "title": "Welcome"
+        },
+        "Card": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "track2": {
+                    "type": "string",
+                    "pattern": "\\;([0-9]{1,19})\\=([0-9]{4}|\\=)([0-9]{3}|\\=)([^\\?]+)\\?$"
+                },
+                "firstName": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "lastName": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "age": {
+                    "type": "integer"
+                },
+                "address": {
+                    "$ref": "#/definitions/Address"
+                },
+                "type": {
+                    "enum": ["owner", "employee"]
+                },
+                "company": {
+                    "type": "string"
+                }
+            },
+            "anyOf": [
+                {
+                    "properties": {
+                    "type": { "const": "employee" }
+                    },
+                    "required": [
+                "address",
+                "age",
+                "firstName",
+                "lastName",
+                "track2",
+                "type",
+                "company"
+            ]
+                },
+                {
+                    "properties": {
+                    "type": { "const": "owner" }
+                },
+                    "required": [
+                "address",
+                "age",
+                "firstName",
+                "lastName",
+                "track2",
+                "type"
+            ]
+                }
+            ],
+            "title": "Card"
+        },
+        "Address": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "city": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "zipCode": {
+                    "type": "string",
+                    "pattern": "^[0-9]{2}[-]?[0-9]{3}$"
+
+                }
+            },
+            "required": [
+                "city",
+                "zipCode"
+            ],
+            "title": "Address"
+        }
+    }
+}

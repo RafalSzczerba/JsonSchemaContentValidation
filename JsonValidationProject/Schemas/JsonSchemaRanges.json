@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/Welcome",
+    "definitions": {
+        "Welcome": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "ranges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Range"
+                    }
+                }
+            },
+            "required": [
+                "ranges"
+            ],
+            "title": "Welcome"
+        },
+        "Range": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "from": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "from",
+                "name",
+                "to"
+            ],
+            "title": "Range"
+        }
+    }
+}

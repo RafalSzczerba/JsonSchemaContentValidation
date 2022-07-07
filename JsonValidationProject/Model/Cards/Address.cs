@@ -10,10 +10,10 @@ namespace JsonValidationProject.Model.Cards
     public class Address
     {
         [JsonPropertyName("city")]
-        public string City { get; set; }
+        public string? City { get; set; }
 
         [JsonPropertyName("zipCode")]
-        public string ZipCode { get; set; }
+        public string? ZipCode { get; set; }
     }
 
 }
