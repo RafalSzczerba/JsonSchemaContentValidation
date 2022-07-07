@@ -1,8 +1,8 @@
-﻿namespace JsonValidationProject.Model
+﻿namespace JsonValidationProject.Model.DTOs
 {
     public class RangeOverlapValidatorInput
     {
-        public long aStart { get; set; }
-        public long aEnd { get; set; }
+        public long Start { get; set; }
+        public long End { get; set; }
     }
 }

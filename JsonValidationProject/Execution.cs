@@ -1,12 +1,7 @@
 ﻿using JsonValidationProject.Contracts;
-using JsonValidationProject.Model;
+using JsonValidationProject.Model.DTOs;
 using JsonValidationProject.Model.Ranges;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace JsonValidationProject
 {
@@ -34,7 +29,7 @@ namespace JsonValidationProject
             }
 
             var obj = new Validators();
-            var jsonTrack2Enter = obj.JsonTrack2EnterCut(fileName);
+            var jsonTrack2Enter = obj.Track2NewLineCharacterRemoval(fileName);
             if (jsonTrack2Enter.Count>0)
             {
                 Console.WriteLine("Following errors has been found:");
@@ -49,7 +44,7 @@ namespace JsonValidationProject
 
             Console.WriteLine("Starting Validation - Json Cards");
             Console.WriteLine("1-stage. Start JsonContent validation");
-            var firstStageResult = obj.JsonContentValidationCards(fileName);
+            var firstStageResult = obj.JsonCardsContentValidation(fileName);
             if (firstStageResult.Count > 0)
             {
                 Console.WriteLine("Following errors in JsonSchema has been found:");
@@ -123,7 +118,7 @@ namespace JsonValidationProject
             var obj = new Validators();
             Console.WriteLine("Starting Validation - Json Ranges");
             Console.WriteLine("Start JsonContent validation");
-            var firstStageResult = obj.JsonContentValidationRanges(fileName);
+            var firstStageResult = obj.JsonRangesContentValidation(fileName);
             if (firstStageResult.Count > 0)
             {
                 Console.WriteLine("Following errors in JsonSchema has been found:");
@@ -161,7 +156,7 @@ namespace JsonValidationProject
             var validators = new Validators();
             Console.WriteLine("1). Start removal of new line character from track2 value if exists");
             data.WriteLine("1). Start removal of new line character from track2 value if exists");
-            var jsonTrack2Enter = validators.JsonTrack2EnterCut(jsonCardsfileName);
+            var jsonTrack2Enter = validators.Track2NewLineCharacterRemoval(jsonCardsfileName);
             if (jsonTrack2Enter.Count > 0)
             {
                 data.WriteLine("1). Validation failed");
@@ -177,7 +172,7 @@ namespace JsonValidationProject
             Console.WriteLine("2). JsonCards content validation started");
             data.WriteLine("1). End removal of new line character from track2 value");
             data.WriteLine("2). JsonCards content validation started");
-            var jsonCardValidation = validators.JsonContentValidationCards(jsonCardsfileName);
+            var jsonCardValidation = validators.JsonCardsContentValidation(jsonCardsfileName);
             if (jsonCardValidation.Count > 0)
             {
                 Console.WriteLine("2). JsonCards content validation failed");
@@ -195,7 +190,7 @@ namespace JsonValidationProject
             Console.WriteLine("3). JsonRanges content validation started");
             data.WriteLine("2). JsonCards content validation sucessfull");
             data.WriteLine("3). JsonRanges content validation started");
-            var jsonRangesValidation = validators.JsonContentValidationRanges(jsonRagesfileName);
+            var jsonRangesValidation = validators.JsonRangesContentValidation(jsonRagesfileName);
             if (jsonRangesValidation.Count > 0)
             {
                 Console.WriteLine("3). JsonRanges content validation failed");
@@ -239,7 +234,7 @@ namespace JsonValidationProject
                         long.TryParse(range.to, out toCast);
 
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         data.WriteLine("4). Ranges interval validation failed due to not correct casting string to long");
                         Console.WriteLine("4). Ranges interval validation failed due to not correct casting string to long");
@@ -248,8 +243,8 @@ namespace JsonValidationProject
                     }
                     rangesInput.Add(new RangeOverlapValidatorInput
                     {
-                        aStart = fromCast,
-                        aEnd = toCast
+                        Start = fromCast,
+                        End = toCast
                     });
                 }
                 var rangesValidation = validators.ValidateRangesIntervalAndOverlap(rangesInput);
@@ -348,12 +343,20 @@ namespace JsonValidationProject
             {
                 Console.WriteLine("8). Matching done:");
                 data.WriteLine("8). Matching done:");
-
+                data.WriteLine("Following matches has been obtained: ");
+                Console.WriteLine("Following matches has been obtained: ");
+                int counter = 1;
                 foreach (var validationInformation in cardMatching.Item2)
                 {
-                    data.WriteLine(validationInformation);
-                    Console.WriteLine(validationInformation);
+                    data.WriteLine($"{counter}.  {validationInformation}");
+                    Console.WriteLine($"{counter}.  {validationInformation}");
+                    counter++;
                 }
+            }
+            else
+            {
+                data.WriteLine("8). No matches has been found");
+                Console.WriteLine("8). No matches has been found");
             }
             data.WriteLine("Ended validation/verfication process");
             Console.WriteLine("Ended validation/verfication process");          

@@ -2,13 +2,9 @@
 using JsonValidationProject.Model.Cards;
 using JsonValidationProject.Model.CardsRanges;
 using JsonValidationProject.Model.Ranges;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace JsonValidationProject
 {
@@ -90,14 +86,10 @@ namespace JsonValidationProject
                         if (regex.Value.IsMatch(cardNo))
                         {
                             result.Add(new MatchedCardWithRange
-                            {
-                                Address = card.Address,
-                                Age = card.Age,
-                                Company = card.Company,
+                            {                                
                                 FirstName = card.FirstName,
                                 LastName = card.LastName,
                                 Track2 = card.Track2,
-                                Type = card.Type,
                                 Matching = regex.Key
                             });
                         }
@@ -107,30 +99,40 @@ namespace JsonValidationProject
                 {
                     string cardNo1 = range.from;
                     string cardNo2 = range.to;
-                    var temp = cardNo1.Substring(0, 2);
-                    var temp1 = cardNo2.Substring(0, 2);
-                    var xx = regExp.ElementAt(0).Value.IsMatch(temp);
-                    var y = regExp.ElementAt(0).Value.IsMatch(temp1);
-
-                    if (regExp.ElementAt(0).Value.IsMatch(temp) && regExp.ElementAt(0).Value.IsMatch(temp1))
+                    try
                     {
-                        cardNo1 = cardNo1.Substring(0, 2);
-                        cardNo2 = cardNo2.Substring(0, 2);
+                        var temp = cardNo1.Substring(0, 2);
+                        var temp1 = cardNo2.Substring(0, 2);
+                        var xx = regExp.ElementAt(0).Value.IsMatch(temp);
+                        var y = regExp.ElementAt(0).Value.IsMatch(temp1);
 
-                    }
-                    foreach (var regex in regExp)
-                    {
-                        if (regex.Value.IsMatch(cardNo1) && regex.Value.IsMatch(cardNo2))
+                        if (regExp.ElementAt(0).Value.IsMatch(temp) && regExp.ElementAt(0).Value.IsMatch(temp1))
                         {
-                            result.Add(new MatchedCardWithRange
+                            cardNo1 = cardNo1.Substring(0, 2);
+                            cardNo2 = cardNo2.Substring(0, 2);
+
+                        }
+                        foreach (var regex in regExp)
+                        {
+                            if (regex.Value.IsMatch(cardNo1) && regex.Value.IsMatch(cardNo2))
                             {
-                                Name = range.name,
-                                Min = range.from,
-                                Max = range.to,
-                                Matching = regex.Key
-                            });
+                                result.Add(new MatchedCardWithRange
+                                {
+                                    Name = range.name,
+                                    Min = range.from,
+                                    Max = range.to,
+                                    Matching = regex.Key
+                                });
+                            }
                         }
                     }
+                    catch (Exception)
+                    {
+
+                        errors.Add("Range had to small characters");
+                        return Tuple.Create(errors, informations);
+                    }
+
                 }
                 var orderedByKey = result.GroupBy(x => x.Matching).OrderBy(x => x.Key).ToList();
                 foreach (var matchedGroup in orderedByKey)
@@ -142,23 +144,18 @@ namespace JsonValidationProject
                         {
                             var card = matchedGroup.ElementAt(i);
                             matchedCards.Add(new MatchedCardWithRange
-                            {
-                                Address = card.Address,
-                                Age = card.Age,
-                                Company = card.Company,
+                            {                                
                                 FirstName = card.FirstName,
                                 LastName = card.LastName,
                                 Max = group.Max,
                                 Min = group.Min,
-                                Track2 = card.Track2,
-                                Type = card.Type,
+                                Track2 = card.Track2,                                
                                 Name = group.Name,
                                 Matching = card.Matching
                             });
                         }
                     }
                 }                
-                informations.Add("Following matches has been obtained");
                 if (matchedCards.Count > 0)
                 {
                     foreach (var matchedCard in matchedCards)

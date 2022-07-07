@@ -1,19 +1,12 @@
 ﻿using JsonValidationProject.Contracts;
 using JsonValidationProject.Enums;
-using JsonValidationProject.Model;
 using JsonValidationProject.Model.Cards;
 using JsonValidationProject.Model.DTOs;
-using JsonValidationProject.Model.Ranges;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace JsonValidationProject
 {
@@ -28,7 +21,7 @@ namespace JsonValidationProject
         }
 
 
-        public IList<string> JsonTrack2EnterCut(string jobFileName)
+        public IList<string> Track2NewLineCharacterRemoval(string jobFileName)
         {           
             string searchText = "\"track2\": \";\r\n";
             string desiredText = "\"track2\": \";";
@@ -70,7 +63,7 @@ namespace JsonValidationProject
         }
 
 
-        public IList<string> JsonContentValidationCards(string jobFileName)
+        public IList<string> JsonCardsContentValidation(string jobFileName)
         {
             IList<string> validationEvents = new List<string>();
             string jsonString;
@@ -108,7 +101,7 @@ namespace JsonValidationProject
             {
                 errors.Add("Wrong json format");
                 throw;
-            }
+            }            
             if(rootCard?.Cards != null)
             {
                 foreach (Card card in rootCard.Cards)
@@ -226,7 +219,7 @@ namespace JsonValidationProject
                         DateTime.ParseExact(date, "yyMM", CultureInfo.InvariantCulture);
                         if (dt < DateTime.Now)
                         {
-                            errors.Add($"Card expired: {card.Track2} ");
+                            errors.Add($"Card expired: {card.Track2} expaired date: {dt.ToString("yy-MM")}");
 
                         }
                     }
@@ -270,10 +263,10 @@ namespace JsonValidationProject
                     switch (date)
                     {
                         case "1":
-                            informations.Add($"Card: {card.Track2} authentication method: {AuthenticationMethod.LackOfRestriction}");
+                            informations.Add($"Card: {card.Track2} authentication method: {AuthenticationMethod.None}");
                             break;
                         case "6":
-                            informations.Add($"Card: {card.Track2} authentication method: {AuthenticationMethod.PinRequired}");
+                            informations.Add($"Card: {card.Track2} authentication method: {AuthenticationMethod.PIN}");
                             break;
 
                         default:
@@ -288,17 +281,17 @@ namespace JsonValidationProject
         public IList<string> ValidateRangesIntervalAndOverlap(List<RangeOverlapValidatorInput> input)
         {
             IList<string> validationEvents = new List<string>();
-            var rangeOverlapValidatorInputs = input.OrderBy(x => x.aEnd).ToList();
+            var rangeOverlapValidatorInputs = input.OrderBy(x => x.End).ToList();
             for (int i = 0; i < rangeOverlapValidatorInputs.Count() - 1; i++)
             {
-                if(rangeOverlapValidatorInputs[i].aEnd <= rangeOverlapValidatorInputs[i].aStart)
+                if(rangeOverlapValidatorInputs[i].End <= rangeOverlapValidatorInputs[i].Start)
                 {
-                    validationEvents.Add($"Not proper interval: {rangeOverlapValidatorInputs[i].aStart} - {rangeOverlapValidatorInputs[i].aEnd}");
+                    validationEvents.Add($"Not proper interval: {rangeOverlapValidatorInputs[i].Start} - {rangeOverlapValidatorInputs[i].End}");
                 }
-                if (rangeOverlapValidatorInputs[i].aStart >= rangeOverlapValidatorInputs[i + 1].aStart || rangeOverlapValidatorInputs[i].aEnd >= rangeOverlapValidatorInputs[i + 1].aStart)
+                if (rangeOverlapValidatorInputs[i].Start >= rangeOverlapValidatorInputs[i + 1].Start || rangeOverlapValidatorInputs[i].End >= rangeOverlapValidatorInputs[i + 1].Start)
                 {
-                    validationEvents.Add($"Interval overlapping between: {rangeOverlapValidatorInputs[i].aStart}-{rangeOverlapValidatorInputs[i].aEnd} and " +
-                        $"{rangeOverlapValidatorInputs[i + 1].aStart}-{rangeOverlapValidatorInputs[i + 1].aEnd}");
+                    validationEvents.Add($"Interval overlapping between: {rangeOverlapValidatorInputs[i].Start}-{rangeOverlapValidatorInputs[i].End} and " +
+                        $"{rangeOverlapValidatorInputs[i + 1].Start}-{rangeOverlapValidatorInputs[i + 1].End}");
                     return validationEvents;
 
                 }
@@ -307,7 +300,7 @@ namespace JsonValidationProject
         }
 
 
-        public IList<string> JsonContentValidationRanges(string jobFileName)
+        public IList<string> JsonRangesContentValidation(string jobFileName)
         {
             IList<string> validationEvents = new List<string>();
             string jsonString;

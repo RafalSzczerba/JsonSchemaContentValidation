@@ -1,10 +1,4 @@
-﻿using JsonValidationProject.Model.Cards;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace JsonValidationProject.Model.CardsRanges
 {
@@ -17,26 +11,11 @@ namespace JsonValidationProject.Model.CardsRanges
         public string? FirstName { get; set; }
 
         [JsonPropertyName("lastName")]
-        public string? LastName { get; set; }
-
-        [JsonPropertyName("age")]
-        public int Age { get; set; }
-
-        [JsonPropertyName("address")]
-        public Address? Address { get; set; }
-
-        [JsonPropertyName("type")]
-        public string? Type { get; set; }
-
-        [JsonPropertyName("company")]
-        public string? Company { get; set; }
-        [JsonPropertyName("name")]
+        public string? LastName { get; set; }       
         public string? Name { get; set; }
         [JsonPropertyName("name")]
         public string? Min { get; set; }
         public string? Max { get; set; }
         public int Matching { get; set; }
-
-
     }
 }

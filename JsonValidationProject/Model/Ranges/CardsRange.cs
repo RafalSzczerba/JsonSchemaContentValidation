@@ -1,13 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JsonValidationProject.Model.Ranges
+﻿namespace JsonValidationProject.Model.Ranges
 {
-
     public class Range
     {
         public string? from { get; set; }
@@ -16,10 +8,4 @@ namespace JsonValidationProject.Model.Ranges
 
         public string? name { get; set; }
     }
-
-
-
-
-
-
 }
