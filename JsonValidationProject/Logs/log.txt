@@ -1,0 +1,69 @@
+1). Start removal of new line character from track2 value if exists
+1). End removal of new line character from track2 value
+2). JsonCards content validation started
+2). JsonCards content validation sucessfull
+3). JsonRanges content validation started
+3). JsonRanges content validation sucessfull
+4). Ranges interval validation started
+4). Ranges interval validation successful
+5). PAN validation started
+PAN:
+Card:;5575110018970641=22112260000094100000? has follwoing PAN: 5575110018970641
+Card:;4874741186953224=20052261257056313563? has follwoing PAN: 4874741186953224
+Card:;4168960335927203=220912115258575? has follwoing PAN: 4168960335927203
+Card:;6763781001004208=2001226778? has follwoing PAN: 6763781001004208
+Card:;4056727672167188=13052261369611500000? has follwoing PAN: 4056727672167188
+5). PAN validation sucessfull
+6). Expiry date verification started
+Following card are expired:
+Card expired: ;4874741186953224=20052261257056313563? expaired date: 20-05
+Card expired: ;6763781001004208=2001226778? expaired date: 20-01
+Card expired: ;4056727672167188=13052261369611500000? expaired date: 13-05
+6). Expiry date verification ended
+7). Card authentication method verification started
+Card authentiaction method checked:
+Card: ;5575110018970641=22112260000094100000? authentication method: PIN
+Card: ;4874741186953224=20052261257056313563? authentication method: PIN
+Card: ;4168960335927203=220912115258575? authentication method: None
+Card: ;6763781001004208=2001226778? authentication method: PIN
+Card: ;4056727672167188=13052261369611500000? authentication method: PIN
+7). Card authentication method verification ended
+8). Card matching stated
+8). Matching done:
+Following matches has been obtained: 
+1.  PAN: ;4168960335927203=220912115258575?
+FirstName: Marta
+LastName: Taka
+Card distributor: Visa electron
+Min range: 40000000001
+Max range: 42999999999
+
+2.  PAN: ;4056727672167188=13052261369611500000?
+FirstName: Pawe
+LastName: Nowak
+Card distributor: Visa electron
+Min range: 40000000001
+Max range: 42999999999
+
+3.  PAN: ;5575110018970641=22112260000094100000?
+FirstName: Jan
+LastName: Kowalski
+Card distributor: debit mastercard
+Min range: 5410000
+Max range: 5575199
+
+4.  PAN: ;4874741186953224=20052261257056313563?
+FirstName: Staszek
+LastName: Kowalski
+Card distributor: visa
+Min range: 45
+Max range: 48
+
+5.  PAN: ;6763781001004208=2001226778?
+FirstName: Tomek
+LastName: Nowak
+Card distributor: maestro
+Min range: 6700001
+Max range: 6899999
+
+Ended validation/verfication process

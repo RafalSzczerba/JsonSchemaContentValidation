@@ -137,24 +137,27 @@ namespace JsonValidationProject
                 var orderedByKey = result.GroupBy(x => x.Matching).OrderBy(x => x.Key).ToList();
                 foreach (var matchedGroup in orderedByKey)
                 {
-                    var group = matchedGroup.Last();
-                    if (group.Name != null && group.Min != null && group.Max != null)
+                    var group = matchedGroup.LastOrDefault();
+                    if (group != null)
                     {
-                        for (int i = 0; i < matchedGroup.Count() - 1; i++)
+                        if (group.Name != null && group.Min != null && group.Max != null)
                         {
-                            var card = matchedGroup.ElementAt(i);
-                            matchedCards.Add(new MatchedCardWithRange
-                            {                                
-                                FirstName = card.FirstName,
-                                LastName = card.LastName,
-                                Max = group.Max,
-                                Min = group.Min,
-                                Track2 = card.Track2,                                
-                                Name = group.Name,
-                                Matching = card.Matching
-                            });
+                            for (int i = 0; i < matchedGroup.Count() - 1; i++)
+                            {
+                                var card = matchedGroup.ElementAt(i);
+                                matchedCards.Add(new MatchedCardWithRange
+                                {
+                                    FirstName = card.FirstName,
+                                    LastName = card.LastName,
+                                    Max = group.Max,
+                                    Min = group.Min,
+                                    Track2 = card.Track2,
+                                    Name = group.Name,
+                                    Matching = card.Matching
+                                });
+                            }
                         }
-                    }
+                    }                   
                 }                
                 if (matchedCards.Count > 0)
                 {
